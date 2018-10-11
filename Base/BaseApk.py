@@ -64,17 +64,16 @@ class ApkInfo():
 
 if __name__ == '__main__':
     pass
-    apkPath = '../app/VivaVideo_7.3.0.apk'
+    apkPath = '../app/VivaVideo_7.3.1.apk'
     litePath = '/Users/zhulixin/Downloads/XiaoYing_lite.apk'
 
     info = ApkInfo(apkPath)
-
-
     apk = info.getApkBaseInfo()
     size = info.getApkSize()
     activity = info.getApkActivity()
     appname = info.getApkName()
 
+    print('appName:', appname)
     print('size:', size)
     print('launchActivity:', activity)
-    print('appName:', appname)
+

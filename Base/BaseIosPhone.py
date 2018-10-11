@@ -19,8 +19,8 @@ def get_ios_devices():
     return devices
 
 
-def get_ios_version(udid):
-    command = "ideviceinfo -u %s -k ProductVersion" % udid
+def get_ios_version(duid):
+    command = "ideviceinfo -u %s -k ProductVersion" % duid
     result = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE,
                               stderr=subprocess.PIPE).stdout.readlines()
     for item in result:
@@ -29,8 +29,8 @@ def get_ios_version(udid):
             return t[0]
 
 
-def get_ios_product_name(udid):
-    command = "ideviceinfo -u %s -k DeviceName" % udid
+def get_ios_product_name(duid):
+    command = "ideviceinfo -u %s -k DeviceName" % duid
     result = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE,
                               stderr=subprocess.PIPE).stdout.readlines()
     for item in result:
@@ -38,8 +38,8 @@ def get_ios_product_name(udid):
         if len(t) >= 2:
             return t[0]
 
-def get_ios_product_type(udid):
-    command = "ideviceinfo -u %s -k ProductType" % udid
+def get_ios_product_type(duid):
+    command = "ideviceinfo -u %s -k ProductType" % duid
     result = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE,
                               stderr=subprocess.PIPE).stdout.readlines()
     for item in result:
@@ -47,8 +47,8 @@ def get_ios_product_type(udid):
         if len(t) >= 2:
             return t[0]
 
-def get_ios_product_os(udid):
-    command = "ideviceinfo -u %s -k ProductName" % udid
+def get_ios_product_os(duid):
+    command = "ideviceinfo -u %s -k ProductName" % duid
     result = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE,
                               stderr=subprocess.PIPE).stdout.readlines()
     for item in result:
@@ -56,24 +56,26 @@ def get_ios_product_os(udid):
         if len(t) >= 2:
             return t[0]
 
-
-def get_ios_PhoneInfo(udid):
-    name = get_ios_product_name(udid)
-    release = get_ios_version(udid)
-    # type = get_ios_product_type(udid)
-    result = {"release": release, "device": name, "udid": udid}
-    # print(result)
+def get_ios_PhoneInfo(duid):
+    name = get_ios_product_name(duid)
+    release = get_ios_version(duid)
+    type = get_ios_product_type(duid)
+    result = {"release": release, "device": name, "duid": duid, "type": type}
     return result
 
 #编译facebook的wda到真机
-def build_wda_ios(udid):
+def build_wda_ios(duid):
     os.popen(
-        "xcodebuild -project WebDriverAgent.xcodeproj -scheme WebDriverAgentRunner -destination id=" + udid + " test")
+        "xcodebuild -project WebDriverAgent.xcodeproj -scheme WebDriverAgentRunner -destination id=" + duid + " test")
 
 
 if __name__ == '__main__':
+    dev_list = []
     devices = get_ios_devices()
-    print(devices)
-    udid = get_ios_devices()[0]
-    get_ios_PhoneInfo(udid)
+    for i in range(len(devices)):
+        duid = get_ios_devices()[i]
+        dev = get_ios_PhoneInfo(duid)
+        dev_list.append(dev)
+    print(dev_list)
+
 
